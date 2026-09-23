@@ -116,7 +116,12 @@ os endpoints e o formato de consumo.
 
 ## ⚙️ Como Rodar em Qualquer PC
 
-**Pré-requisitos:** Python 3.9+ → [python.org](https://python.org) | Git → [git-scm.com](https://git-scm.com)
+**Pré-requisitos:** Python **3.11+** → [python.org](https://python.org) | Git → [git-scm.com](https://git-scm.com)
+
+> ⚠️ Tem que ser 3.11 ou mais novo: o `pandas==3.0.5` do `requirements.txt`
+> não instala em versões anteriores. Atenção no macOS, que vem de fábrica
+> com o Python 3.9 — confira com `python3 --version` antes de criar o venv
+> (veja o [guia do MacBook](GUIA_APRESENTACAO_MAC.md)).
 
 ```bash
 # 1. Clonar o repositório
@@ -382,7 +387,7 @@ python drone/testar_anonimizacao.py
 - [d3-delaunay](https://github.com/d3/d3-delaunay) — Geração de territórios de bairro por Voronoi
 - [Cloudflare Workers](https://workers.cloudflare.com) + [D1](https://developers.cloudflare.com/d1/) — API de vigilância epidemiológica
 - [winsdk](https://pypi.org/project/winsdk/) / [pyobjc-framework-CoreLocation](https://pypi.org/project/pyobjc-framework-Cocoa/) — Localização por rede (Windows/macOS)
-- [Python 3.10+](https://python.org)
+- [Python 3.11+](https://python.org)
 
 ---
 

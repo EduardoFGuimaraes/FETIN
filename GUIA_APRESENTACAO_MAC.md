@@ -28,20 +28,45 @@ aparelhos da demonstração:
 
 Fazer **com antecedência**, não no dia da apresentação:
 
+**Antes de tudo, confira a versão do Python.** O `python3` que vem com as
+ferramentas de linha de comando da Apple é o 3.9, e o `requirements.txt`
+não instala nele: o `pandas==3.0.5` exige 3.11 ou mais novo, e o
+`roboflow==1.4.0` exige 3.10 ou mais novo. Rodar `python3 -m venv` num Mac
+de fábrica cria um ambiente 3.9 e o `pip install` quebra no meio.
+
+```bash
+python3 --version
+```
+
+Se der **3.10 ou menor**, instale um Python mais novo antes de continuar
+(via [Homebrew](https://brew.sh)) e use ele no lugar do `python3`:
+
+```bash
+brew install python@3.12
+```
+
+Com o Python certo em mãos:
+
 ```bash
 git clone https://github.com/1matheeus/FETIN.git
 cd FETIN
-python3 -m venv venv
+python3.12 -m venv venv          # ou o python3.XX que você tiver, 3.11+
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+- Confirme que o venv nasceu na versão certa antes de instalar:
+  `python --version` (já com o venv ativado) tem que mostrar 3.11 ou mais.
 - `source venv/bin/activate` é o equivalente do `venv\Scripts\activate` do
   Windows — precisa rodar isso toda vez que abrir um Terminal novo, antes
   dos comandos dos passos seguintes.
 - Se der erro instalando `ultralytics` ou `opencv-python` (comum em Macs
   com chip Apple Silicon — M1/M2/M3), guarde a mensagem de erro para
   resolver com calma antes do dia da feira.
+
+> Testado num MacBook Apple Silicon com Python 3.12.14: as 59 dependências
+> instalam sem erro, o modelo carrega e o PyTorch reconhece a GPU do Mac
+> (MPS).
 
 ## 3. Testar a câmera uma vez (webcam do Mac)
 
@@ -50,10 +75,36 @@ python demo.py
 ```
 
 Na **primeira vez**, o macOS pergunta "Terminal gostaria de acessar a
-câmera" — clique em **Permitir**. Se perder esse popup sem responder, vá em
-`Ajustes do Sistema > Privacidade e Segurança > Câmera` e ative manualmente
-para o Terminal. Teste isso com antecedência — não é bom descobrir esse
-popup no meio da demonstração.
+câmera" — clique em **Permitir**. Teste isso com antecedência — não é bom
+descobrir esse popup no meio da demonstração.
+
+**Se a permissão já tiver sido negada** (ou o popup passou batido), o script
+não avisa que o problema é permissão: ele varre os índices de câmera, nenhum
+abre, e ele encerra com `Nenhuma câmera encontrada.` — como se o Mac não
+tivesse câmera nenhuma. No Terminal aparece:
+
+```
+OpenCV: not authorized to capture video (status 0), requesting...
+OpenCV: camera failed to properly initialize!
+Nenhuma câmera encontrada.
+```
+
+Para resolver:
+
+1. **Ajustes do Sistema > Privacidade e Segurança > Câmera**
+2. Ligue o app que você usa para rodar o comando
+3. **Feche e reabra o app** — a permissão só passa a valer depois disso
+
+> ⚠️ A permissão é do **aplicativo que roda o Python**, não do Python. Se
+> você testou pelo VS Code e no dia da feira vai abrir o Terminal, são duas
+> autorizações diferentes — libere a do app que você vai realmente usar na
+> apresentação.
+
+Se o Mac tiver mais de uma câmera disponível (a FaceTime HD embutida e o
+iPhone via Continuidade, por exemplo), o script pega **a primeira que
+abrir** — que nem sempre é a que você quer. Confira qual entrou antes de
+apresentar; o `drone/detectar_foco.py` aceita `--camera 1` para escolher
+outra.
 
 ## 4. Iniciar o GPS Tether Server no Android
 
@@ -109,9 +160,11 @@ python drone/detectar_foco.py --gps-rede IP_DO_ANDROID:PORTA --sem-rede
 # uma vez, antes da feira
 git clone https://github.com/1matheeus/FETIN.git
 cd FETIN
-python3 -m venv venv
+python3.12 -m venv venv      # precisa ser 3.11+; o 3.9 de fábrica do Mac não serve
 source venv/bin/activate
 pip install -r requirements.txt
+# e libere a câmera para o app que você vai usar:
+# Ajustes do Sistema > Privacidade e Segurança > Câmera (depois reabra o app)
 
 # no dia, depois de conectar o hotspot e ligar o GPS Tether Server
 source venv/bin/activate
